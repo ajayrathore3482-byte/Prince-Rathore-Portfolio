@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Prince Rathore — 3D Interactive Developer Portfolio
 
 A dark Space Universe themed developer portfolio for **Prince Rathore** (`Backend Developer | Full Stack Developer`), built with **React**, **Vite**, **Tailwind CSS**, **Three.js / React Three Fiber**, **GSAP**, and **Lucide React** according to [prd.md](./prd.md).
@@ -189,3 +190,6 @@ Portfolio/
 3. Wait for DNS propagation; Vercel, Netlify, and Cloudflare Pages automatically provision and renew **Let's Encrypt / Edge TLS certificates** and enforce **HTTPS** redirects.
 4. Update `https://your-domain.com/` in `index.html`, `public/robots.txt`, and `public/sitemap.xml` to your live domain and redeploy.
 
+=======
+# Prince-Rathore-Portfolio
+>>>>>>> c179f56974c475df10b281f280988ec5cbceb3d8
