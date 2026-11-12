@@ -1,8 +1,10 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AlertCircle,
   Briefcase,
+  Check,
   CheckCircle2,
+  Copy,
   Download,
   Loader2,
   Mail,
@@ -42,13 +44,52 @@ export default function Contact() {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [emailCopied, setEmailCopied] = useState(false);
+  const copyTimeoutRef = useRef(null);
   const sectionRef = useRef(null);
 
   useScrollReveal(sectionRef);
 
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const configuredEmail = personalInfo.contact?.email?.trim() || '';
   const hasRealEmail = isValidConfiguredUrl(configuredEmail ? `mailto:${configuredEmail}` : '');
   const hasResume = Boolean(personalInfo.resumeUrl?.trim());
+
+  const handleCopyEmail = async () => {
+    if (!hasRealEmail) return;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(configuredEmail);
+      } else {
+        const textArea = document.createElement('textarea');
+        textArea.value = configuredEmail;
+        textArea.setAttribute('readonly', '');
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+      }
+
+      setEmailCopied(true);
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+      copyTimeoutRef.current = setTimeout(() => {
+        setEmailCopied(false);
+      }, 2500);
+    } catch {
+      setEmailCopied(false);
+    }
+  };
 
   const infoCards = [
     {
@@ -65,6 +106,7 @@ export default function Contact() {
       label: 'Email',
       value: hasRealEmail ? configuredEmail : personalInfo.contact?.emailPlaceholder,
       href: hasRealEmail ? `mailto:${configuredEmail}` : '',
+      copyable: hasRealEmail,
       icon: Mail,
     },
     {
@@ -136,31 +178,59 @@ export default function Contact() {
               </p>
 
               <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                {infoCards.map(({ label, value, href, icon: Icon }) => (
+                {infoCards.map(({ label, value, href, copyable, icon: Icon }) => (
                   <div
                     key={label}
-                    className="flex items-start gap-3.5 rounded-xl border border-white/10 bg-[#080A12]/65 p-3.5 transition-colors hover:border-[#398BFF]/40"
+                    className="flex items-center justify-between gap-3 rounded-xl border border-white/10 bg-[#080A12]/65 p-3.5 transition-colors hover:border-[#398BFF]/40"
                   >
-                    <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#398BFF]/30 bg-[#398BFF]/10 text-[#398BFF]">
-                      <Icon className="h-4 w-4" aria-hidden="true" />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-xs font-medium tracking-wider text-[#A1A1AA] uppercase">
-                        {label}
-                      </p>
-                      {href ? (
-                        <a
-                          href={href}
-                          className="mt-0.5 block truncate text-sm font-medium text-white transition-colors hover:text-[#398BFF]"
-                        >
-                          {value}
-                        </a>
-                      ) : (
-                        <p className="mt-0.5 truncate text-sm font-medium text-white/90">
-                          {value}
-                        </p>
-                      )}
+                    <div className="flex min-w-0 flex-1 items-start gap-3.5">
+                      <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[#398BFF]/30 bg-[#398BFF]/10 text-[#398BFF]">
+                        <Icon className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs font-medium tracking-wider text-[#A1A1AA] uppercase">
+                            {label}
+                          </p>
+                          {copyable && emailCopied && (
+                            <span
+                              role="status"
+                              className="inline-flex items-center rounded-full border border-[#8B5CF6]/40 bg-[#8B5CF6]/15 px-2 py-0.5 text-[11px] font-medium text-[#C4B5FD]"
+                            >
+                              Email copied!
+                            </span>
+                          )}
+                        </div>
+                        {href ? (
+                          <a
+                            href={href}
+                            className="mt-0.5 block truncate text-sm font-medium text-white transition-colors duration-200 hover:text-[#7BAEFF] hover:underline hover:decoration-[#8B5CF6]/70 hover:underline-offset-4 focus-visible:text-[#7BAEFF] focus-visible:outline-none"
+                          >
+                            {value}
+                          </a>
+                        ) : (
+                          <p className="mt-0.5 truncate text-sm font-medium text-white/90">
+                            {value}
+                          </p>
+                        )}
+                      </div>
                     </div>
+
+                    {copyable && (
+                      <button
+                        type="button"
+                        onClick={handleCopyEmail}
+                        aria-label="Copy email"
+                        title="Copy email"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] text-[#A1A1AA] transition-all duration-200 hover:border-[#8B5CF6]/50 hover:bg-[#398BFF]/15 hover:text-[#7BAEFF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#398BFF]/70"
+                      >
+                        {emailCopied ? (
+                          <Check className="h-3.5 w-3.5 text-[#A78BFA]" aria-hidden="true" />
+                        ) : (
+                          <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+                        )}
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>

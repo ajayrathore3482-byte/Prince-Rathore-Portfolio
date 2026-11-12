@@ -9,6 +9,7 @@ import SocialLinks from '../src/components/ui/SocialLinks';
 import ScrollIndicator from '../src/components/ui/ScrollIndicator';
 import Navbar from '../src/components/common/Navbar';
 import Footer from '../src/components/common/Footer';
+import { personalInfo } from '../src/data/personal';
 
 describe('Phase 3 Design System & Reusable Components', () => {
   it('renders PrimaryButton and SecondaryButton as links or buttons', () => {
@@ -40,17 +41,24 @@ describe('Phase 3 Design System & Reusable Components', () => {
   });
 
   it('omits unconfigured SocialLinks and renders ScrollIndicator cleanly', () => {
-    render(
-      <div>
-        <SocialLinks showLabels />
-        <ScrollIndicator targetId="about" />
-      </div>
-    );
+    const originalEmail = personalInfo.contact.email;
+    personalInfo.contact.email = '';
 
-    expect(screen.queryByRole('link', { name: 'GitHub' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: 'LinkedIn' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('link', { name: 'Email' })).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /scroll to explore/i })).toHaveAttribute('href', '#about');
+    try {
+      render(
+        <div>
+          <SocialLinks showLabels />
+          <ScrollIndicator targetId="about" />
+        </div>
+      );
+
+      expect(screen.queryByRole('link', { name: 'GitHub' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('link', { name: 'LinkedIn' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('link', { name: 'Email' })).not.toBeInTheDocument();
+      expect(screen.getByRole('link', { name: /scroll to explore/i })).toHaveAttribute('href', '#about');
+    } finally {
+      personalInfo.contact.email = originalEmail;
+    }
   });
 
   it('toggles Navbar mobile menu and closes on Escape key', () => {

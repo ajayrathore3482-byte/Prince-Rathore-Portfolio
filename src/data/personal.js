@@ -25,8 +25,8 @@ export const personalInfo = {
   resumeUrl: '',
   resumeDownloadFilename: 'Prince-Rathore-Backend-Developer-Resume.pdf',
   contact: {
-    // Set to your real public email when ready; neutral notice shown otherwise
-    email: '',
+    // Public contact email
+    email: 'ajayrathore3482@gmail.com',
     emailPlaceholder: 'Not yet configured',
   },
   socials: {

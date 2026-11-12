@@ -27,8 +27,28 @@ describe('Phase 7: Contact Section, Form Validation & Footer', () => {
     expect(screen.getByText('Prince Rathore')).toBeInTheDocument();
     expect(screen.getByText(/Backend Developer/i)).toBeInTheDocument();
     expect(screen.getByText('Delhi, India')).toBeInTheDocument();
-    expect(screen.getByText(personalInfo.contact.emailPlaceholder)).toBeInTheDocument();
+    expect(personalInfo.contact.email).toBe('ajayrathore3482@gmail.com');
+    const emailLink = screen.getByRole('link', { name: 'ajayrathore3482@gmail.com' });
+    expect(emailLink).toHaveAttribute('href', 'mailto:ajayrathore3482@gmail.com');
     expect(screen.queryByRole('link', { name: /download resume/i })).not.toBeInTheDocument();
+  });
+
+  it('copies the configured email address and displays "Email copied!" feedback', async () => {
+    const writeTextMock = vi.fn().mockResolvedValue(undefined);
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: writeTextMock },
+    });
+
+    render(<Contact />);
+
+    const copyButton = screen.getByRole('button', { name: /copy email/i });
+    fireEvent.click(copyButton);
+
+    await waitFor(() => {
+      expect(writeTextMock).toHaveBeenCalledWith('ajayrathore3482@gmail.com');
+      expect(screen.getByText('Email copied!')).toBeInTheDocument();
+    });
   });
 
   it('validates required fields, email format, and message length', () => {
