@@ -1,0 +1,255 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space-primary: #080A12;
+  --color-space-secondary: #101522;
+  --color-accent-blue: #398BFF;
+  --color-accent-violet: #8B5CF6;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A1A1AA;
+  --color-border-glass: rgba(255, 255, 255, 0.12);
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    /* Color System */
+    --bg-primary: #080A12;
+    --bg-secondary: #101522;
+    --bg-glass: rgba(16, 21, 34, 0.68);
+    --bg-glass-strong: rgba(16, 21, 34, 0.84);
+    --accent-primary: #398BFF;
+    --accent-secondary: #8B5CF6;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --border-subtle: rgba(255, 255, 255, 0.12);
+    --border-hover: rgba(57, 139, 255, 0.36);
+
+    /* Typography System */
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Spacing & Container System */
+    --container-max: 80rem;
+    --container-narrow: 56rem;
+    --section-space-y: clamp(4.5rem, 8vw, 6.5rem);
+
+    /* Radius System */
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
+    --radius-pill: 9999px;
+
+    /* Shadow System */
+    --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.35);
+    --shadow-elevated: 0 18px 48px rgba(0, 0, 0, 0.48);
+    --shadow-accent-blue: 0 8px 24px rgba(57, 139, 255, 0.18);
+    --shadow-accent-violet: 0 8px 24px rgba(139, 92, 246, 0.16);
+  }
+
+  html {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-regular);
+    scroll-behavior: smooth;
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    line-height: 1.65;
+    overflow-x: clip;
+    min-height: 100vh;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+  }
+
+  /* Accessible keyboard focus ring */
+  :focus-visible {
+    outline: 2px solid var(--accent-primary);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .section-shell {
+    position: relative;
+    padding-block: var(--section-space-y);
+  }
+
+  .section-divider {
+    height: 1px;
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.1) 25%,
+      rgba(57, 139, 255, 0.28) 50%,
+      rgba(139, 92, 246, 0.22) 65%,
+      transparent 100%
+    );
+  }
+
+  .glass-surface {
+    background-color: var(--bg-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-glass);
+  }
+
+  .glass-surface-scrolled {
+    background-color: var(--bg-glass-strong);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  .glass-card {
+    position: relative;
+    background-color: rgba(16, 21, 34, 0.62);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-glass);
+    transition:
+      border-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 240ms cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .glass-card-interactive:hover {
+    transform: translateY(-3px);
+    border-color: var(--border-hover);
+    background-color: rgba(16, 21, 34, 0.8);
+    box-shadow: var(--shadow-elevated);
+  }
+
+  /* Lightweight CSS cosmic starfield layers */
+  .cosmic-stars-far {
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(255, 255, 255, 0.45) 100%, transparent),
+      radial-gradient(1px 1px at 28% 64%, rgba(57, 139, 255, 0.5) 100%, transparent),
+      radial-gradient(1px 1px at 46% 32%, rgba(255, 255, 255, 0.35) 100%, transparent),
+      radial-gradient(1px 1px at 67% 78%, rgba(139, 92, 246, 0.45) 100%, transparent),
+      radial-gradient(1px 1px at 84% 22%, rgba(255, 255, 255, 0.4) 100%, transparent),
+      radial-gradient(1px 1px at 92% 56%, rgba(57, 139, 255, 0.4) 100%, transparent);
+    background-size: 420px 420px;
+  }
+
+  .cosmic-stars-near {
+    background-image:
+      radial-gradient(1.5px 1.5px at 18% 42%, rgba(255, 255, 255, 0.55) 100%, transparent),
+      radial-gradient(1.5px 1.5px at 54% 14%, rgba(57, 139, 255, 0.55) 100%, transparent),
+      radial-gradient(1.5px 1.5px at 76% 62%, rgba(139, 92, 246, 0.5) 100%, transparent),
+      radial-gradient(1.5px 1.5px at 36% 86%, rgba(255, 255, 255, 0.45) 100%, transparent);
+    background-size: 640px 640px;
+  }
+
+  .space-grid-overlay {
+    background-image:
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 85% 65% at 50% 25%, black 30%, transparent 100%);
+  }
+}
+
+/* Reusable Keyframes & Animation Utilities */
+@keyframes orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float-subtle {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes scroll-wheel {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(8px);
+    opacity: 0.25;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+
+@keyframes star-drift {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-orbit {
+  animation: orbit-spin 1.4s linear infinite;
+}
+
+.animate-orbit-reverse {
+  animation: orbit-spin 2.2s linear infinite reverse;
+}
+
+.animate-float-subtle {
+  animation: float-subtle 6s ease-in-out infinite;
+}
+
+.animate-scroll-wheel {
+  animation: scroll-wheel 1.8s ease-in-out infinite;
+}
+
+.animate-star-twinkle {
+  animation: star-drift 7s ease-in-out infinite;
+}
+
+/* Reduced motion preference support (PRD §6.4 & §10) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
